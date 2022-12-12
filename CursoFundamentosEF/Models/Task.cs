@@ -1,18 +1,9 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace CursoFundamentosEF.Models;
 
 public class Task
 {
-    [Key]
     public Guid TaskId { get; set; }
 
-    [ForeignKey(nameof(CategoryId))]
-    public Guid CategoryId { get; set; }
-
-    [Required]
-    [MaxLength(200)]
     public string Title { get; set; }
 
     public string Description { get; set; }
@@ -21,9 +12,12 @@ public class Task
 
     public DateTime CreatedAt { get; set; }
 
+    // relationships
+    public Guid CategoryId { get; set; }
+
     public virtual Category Category { get; set; }
 
-    [NotMapped]
+    // not mapped
     public string Summary { get; set; }
 }
 
