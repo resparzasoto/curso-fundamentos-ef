@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  curso-fundamentos-ef:
+    image: postgres:13
+    container_name: curso-fundamentos-ef
+    restart: unless-stopped
+    environment: 
+      - POSTGRES_USER=${DATABASE_USERNAME}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_NAME}
+    ports: 
+      - "5432:5432"
+    networks: 
+      - curso-fundamentos-ef-network
+
+networks: 
+  curso-fundamentos-ef-network:
+    driver: bridge
