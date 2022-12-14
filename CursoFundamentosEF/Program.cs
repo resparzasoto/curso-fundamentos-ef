@@ -20,4 +20,11 @@ app.MapGet("/health", ([FromServices] TasksContext dbContext) => {
     return Results.Ok("Database is not in memory");
 });
 
+app.MapGet("/api/tasks", ([FromServices] TasksContext dbContext) => {
+    return Results.Ok(
+        dbContext.Tasks.Include(t => t.Category)
+                       .Where(t => t.PriorityTask == CursoFundamentosEF.Models.Priority.High)
+    );
+});
+
 app.Run();

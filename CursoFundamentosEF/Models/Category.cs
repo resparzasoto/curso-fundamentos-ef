@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace CursoFundamentosEF.Models;
 
 public class Category
@@ -10,5 +12,6 @@ public class Category
 
     public int Weight { get; set; }
 
+    [JsonIgnore]
     public virtual ICollection<Task> Tasks { get; set; }
 }
