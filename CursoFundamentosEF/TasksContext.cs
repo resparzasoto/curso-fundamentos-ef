@@ -58,6 +58,7 @@ public class TasksContext : DbContext
             task.ToTable("Task");
             task.HasKey(t => t.TaskId);
 
+            task.Property(t => t.TaskId).HasDefaultValue(Guid.NewGuid());
             task.Property(t => t.Title).IsRequired().HasMaxLength(200);
             task.Property(t => t.Description).IsRequired(false);
             task.Property(t => t.PriorityTask).HasConversion(typeof(int));

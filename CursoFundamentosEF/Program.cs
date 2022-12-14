@@ -20,11 +20,20 @@ app.MapGet("/health", ([FromServices] TasksContext dbContext) => {
     return Results.Ok("Database is not in memory");
 });
 
+app.MapGet("/api/categories", ([FromServices] TasksContext dbContext) => {
+    return Results.Ok(dbContext.Categories.ToList());
+});
+
 app.MapGet("/api/tasks", ([FromServices] TasksContext dbContext) => {
-    return Results.Ok(
-        dbContext.Tasks.Include(t => t.Category)
-                       .Where(t => t.PriorityTask == CursoFundamentosEF.Models.Priority.High)
-    );
+    return Results.Ok(dbContext.Tasks.Include(t => t.Category));
+});
+
+app.MapPost("/api/tasks", async ([FromServices] TasksContext dbContext, [FromBody] CursoFundamentosEF.Models.Task task) =>
+{
+    await dbContext.AddAsync(task);
+    await dbContext.SaveChangesAsync();
+
+    return Results.Ok();
 });
 
 app.Run();
