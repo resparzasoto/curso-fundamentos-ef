@@ -1,6 +1,6 @@
-using Microsoft.EntityFrameworkCore;
 using CursoFundamentosEF;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +30,26 @@ app.MapGet("/api/tasks", ([FromServices] TasksContext dbContext) => {
 
 app.MapPost("/api/tasks", async ([FromServices] TasksContext dbContext, [FromBody] CursoFundamentosEF.Models.Task task) =>
 {
-    await dbContext.AddAsync(task);
+    await dbContext.Tasks.AddAsync(task);
+    await dbContext.SaveChangesAsync();
+
+    return Results.Ok();
+});
+
+app.MapPut("/api/tasks/{id}", async ([FromServices] TasksContext dbContext, [FromBody] CursoFundamentosEF.Models.Task task, [FromRoute] Guid id) =>
+{
+    var taskFound = await dbContext.Tasks.FindAsync(id);
+
+    if (taskFound is null)
+    {
+        return Results.NotFound();
+    }
+
+    taskFound.Title = task.Title;
+    taskFound.Description = task.Description;
+    taskFound.PriorityTask = task.PriorityTask;
+    taskFound.CategoryId = task.CategoryId;
+
     await dbContext.SaveChangesAsync();
 
     return Results.Ok();
