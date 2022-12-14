@@ -42,7 +42,7 @@ app.MapPut("/api/tasks/{id}", async ([FromServices] TasksContext dbContext, [Fro
 
     if (taskFound is null)
     {
-        return Results.NotFound();
+        return Results.NotFound(id);
     }
 
     taskFound.Title = task.Title;
@@ -50,6 +50,21 @@ app.MapPut("/api/tasks/{id}", async ([FromServices] TasksContext dbContext, [Fro
     taskFound.PriorityTask = task.PriorityTask;
     taskFound.CategoryId = task.CategoryId;
 
+    await dbContext.SaveChangesAsync();
+
+    return Results.Ok();
+});
+
+app.MapDelete("/api/tasks/{id}", async ([FromServices] TasksContext dbContext, [FromRoute] Guid id) =>
+{
+    var taskFound = await dbContext.Tasks.FindAsync(id);
+
+    if (taskFound is null)
+    {
+        return Results.NotFound(id);
+    }
+
+    dbContext.Remove(taskFound);
     await dbContext.SaveChangesAsync();
 
     return Results.Ok();
